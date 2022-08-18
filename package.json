@@ -1,0 +1,16 @@
+{
+  "name": "check-audio-metadata",
+  "version": "0.0.1",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "ffmetadata": "^1.7.0",
+    "mime-types": "^2.1.35"
+  }
+}
