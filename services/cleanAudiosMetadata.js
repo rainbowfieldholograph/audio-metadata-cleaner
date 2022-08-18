@@ -1,7 +1,7 @@
 import * as fsPromises from 'node:fs/promises';
 import * as path from 'node:path';
 import * as ffmetadata from 'ffmetadata';
-import { isFileAudio } from '../helpers/isAudio.js';
+import { isFileAudio } from '../helpers/isFileAudio.js';
 
 // TODO: add recursive
 export const cleanAudiosMetadata = async (dirPath, triggerText) => {
@@ -30,8 +30,7 @@ export const cleanAudiosMetadata = async (dirPath, triggerText) => {
           const triggerLower = triggerText.toLowerCase();
 
           const hasTriggerText =
-            keyLower.includes(triggerLower) ||
-            valueLower.includes(triggerLower);
+            keyLower.includes(triggerLower) || valueLower.includes(triggerLower);
 
           if (hasTriggerText) {
             keysToClear.add(key);
