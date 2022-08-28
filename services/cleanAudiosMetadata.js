@@ -1,7 +1,7 @@
 import * as fsPromises from 'node:fs/promises';
 import * as path from 'node:path';
 import * as ffmetadata from 'ffmetadata';
-import { isFileAudio } from '../helpers/isFileAudio.js';
+import { changeAudioMetadata } from './changeAudioMetadata.js';
 
 // TODO: add recursive
 export const cleanAudiosMetadata = async (dirPath, triggerText) => {
@@ -12,13 +12,11 @@ export const cleanAudiosMetadata = async (dirPath, triggerText) => {
     });
 
     for (const src of fullPaths) {
-      const { base } = path.parse(src);
-
-      if (!isFileAudio(base)) continue;
-
       ffmetadata.read(src, (err, data) => {
+        const { base } = path.parse(src);
+
         if (err) {
-          console.error('Error reading metadata:', err);
+          console.error(`Error reading file: ${base}`);
           return;
         }
 
@@ -32,9 +30,7 @@ export const cleanAudiosMetadata = async (dirPath, triggerText) => {
           const hasTriggerText =
             keyLower.includes(triggerLower) || valueLower.includes(triggerLower);
 
-          if (hasTriggerText) {
-            keysToClear.add(key);
-          }
+          if (hasTriggerText) keysToClear.add(key);
         }
 
         const metadata = {};
@@ -42,17 +38,10 @@ export const cleanAudiosMetadata = async (dirPath, triggerText) => {
           metadata[key] = '';
         }
 
-        ffmetadata.write(src, metadata, (err) => {
-          if (err) {
-            console.error('Error while reading metadata:', err);
-            return;
-          }
-
-          console.log('done:', src);
-        });
+        changeAudioMetadata(src, metadata);
       });
     }
   } catch (error) {
-    console.error(error);
+    console.error('Error when reading dir: ', error.message);
   }
 };
